@@ -1,0 +1,307 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Unificado | Blackbox Beatz</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0a;
+            --bg-card: #141416;
+            --border-color: #262629;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1a6;
+            --input-bg: #1c1c1e;
+            --accent-active: #ffffff;
+            --accent-text: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* Seção de Marcas / Logos */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 32px;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .logo-main-container {
+            margin-bottom: 24px;
+        }
+
+        .logo-blackbox {
+            height: 65px;
+            max-width: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        }
+
+        .battle-logos-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+
+        .battle-logos-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* Reduzido levemente para equilibrar o tamanho maior das imagens */
+        }
+
+        .logo-battle {
+            height: 50px; /* Aumentado de 38px para 50px para dar o destaque necessário */
+            object-fit: contain;
+            opacity: 0.85; /* Um pouco mais visível por padrão */
+            transition: all 0.3s ease;
+        }
+
+        .logo-battle:hover {
+            opacity: 1;
+        }
+
+        /* Card Principal */
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .card-header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .card-header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Seleção de Perfil */
+        .role-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 600;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .btn-role {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-role:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.03);
+            transform: translateY(-2px); /* Eleva o botão de leve */
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); /* Cria o efeito de brilho/glow cinza claro */
+        }
+
+       .btn-role.active {
+            background-color: var(--accent-active);
+            color: var(--accent-text);
+            border-color: var(--accent-active);
+            transform: translateY(0); /* Garante que ele assente ao ser clicado */
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25); /* Glow mais forte no botão ativo */
+        }
+
+        /* Formulário de Cadastro */
+        #cadastroForm {
+            display: none;
+            margin-top: 24px;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            padding: 14px;
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #55555a;
+            background-color: #222225;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #2c2c2e;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="brand-header">
+        <div class="logo-main-container">
+            <img src="img/blackbox.png" alt="Blackbox Beatz" class="logo-blackbox">
+        </div>
+        
+        <div class="battle-logos-title">Em parceria com</div>
+        
+        <div class="battle-logos-row">
+            <img src="img/coalizao.png" alt="Coalizão 016" class="logo-battle">
+            <img src="img/sn7.png" alt="Sangue na 7" class="logo-battle">
+            <img src="img/novaera.png" alt="Nova Era" class="logo-battle">
+        </div>
+    </header>
+
+    <main class="card">
+        <div class="card-header">
+            <h1>Portal de Cadastro Técnico</h1>
+            <p>Distribuição digital unificada e gestão profissional de direitos fonográficos.</p>
+        </div>
+
+        <span class="role-label">Selecione seu Perfil</span>
+        <div class="role-selector">
+            <button class="btn-role" id="btnMc" onclick="selectRole('MC')">Sou MC</button>
+            <button class="btn-role" id="btnBeatmaker" onclick="selectRole('Beatmaker')">Sou Beatmaker</button>
+        </div>
+
+        <form id="cadastroForm">
+            <input type="hidden" id="papel" name="papel" value="">
+            
+            <div class="form-group">
+                <label for="nome">Nome Completo</label>
+                <input type="text" id="nome" name="nome" placeholder="Seu nome civil" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="artistico">Nome Artístico</label>
+                <input type="text" id="artistico" name="artistico" placeholder="Como você assina suas faixas" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail Comercial</label>
+                <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
+            </div>
+
+            <button type="button" class="btn-submit" onclick="enviarCadastro()">Finalizar e Avançar</button>
+        </form>
+    </main>
+
+    <script>
+        function selectRole(role) {
+            document.getElementById('papel').value = role;
+            
+            document.getElementById('btnMc').classList.remove('active');
+            document.getElementById('btnBeatmaker').classList.remove('active');
+            
+            if (role === 'MC') {
+                document.getElementById('btnMc').classList.add('active');
+            } else {
+                document.getElementById('btnBeatmaker').classList.add('active');
+            }
+
+            document.getElementById('cadastroForm').style.display = 'block';
+        }
+
+        async function enviarCadastro() {
+            const papel = document.getElementById('papel').value;
+            const artistico = document.getElementById('artistico').value;
+            
+            // Futura integração com o Supabase entra aqui.
+            
+            alert(`Cadastro de ${artistico} pré-salvo com sucesso. Direcionando para as etapas da UBC...`);
+            window.location.href = `area-membros.html?role=${papel.toLowerCase()}`;
+        }
+    </script>
+</body>
+</html>
