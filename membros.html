@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área de Membros | Blackbox Beatz</title>
+    <style>
+        :root {
+            --bg-main: #0a0a0a;
+            --bg-card: #141416;
+            --border-color: #262629;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1a6;
+            --accent-drive: #ffffff;
+            --accent-text-drive: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 20px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 24px;
+            width: 100%;
+            max-width: 640px;
+        }
+
+        .logo-blackbox {
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 640px;
+            padding: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .panel-header {
+            margin-bottom: 24px;
+        }
+
+        .panel-header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .panel-header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .profile-badge {
+            display: inline-block;
+            background-color: #1c1c1e;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #driveSection {
+            display: none;
+            border-top: 1px solid var(--border-color);
+            padding-top: 24px;
+            margin-top: 24px;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-drive {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: var(--accent-drive);
+            color: var(--accent-text-drive);
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-drive:hover {
+            background-color: rgba(255, 255, 255, 0.85);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="brand-header">
+        <img src="img/blackbox.png" alt="Blackbox Beatz" class="logo-blackbox">
+    </header>
+
+    <main class="panel">
+        <div class="panel-header">
+            <div id="perfilBadge" class="profile-badge">Processando...</div>
+            <h1>Passo a Passo: Filiação UBC</h1>
+            <p id="mensagemBoasVindas">Cadastro recebido! Assista ao vídeo abaixo para entender como agilizar sua filiação na UBC e garantir o recebimento correto dos seus royalties.</p>
+        </div>
+
+        <div class="video-container">
+            <iframe 
+                src="https://www.youtube.com/embed/2oq7_UcnYBk" 
+                title="UBC União Brasileira dos Compositores! Cadastro + Rápido!" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen>
+            </iframe>
+        </div>
+        <div style="text-align: center; margin-bottom: 24px; margin-top: -12px;">
+            <a href="https://youtu.be/2oq7_UcnYBk" target="_blank" style="color: var(--text-secondary); font-size: 12px; text-decoration: underline;">
+                Não conseguiu assistir? Clique aqui para abrir direto no YouTube.
+            </a>
+        </div>
+
+        <div id="driveSection">
+            <div class="panel-header" style="margin-bottom: 16px;">
+                <h2 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">Envio de Instrumentais</h2>
+                <p style="font-size: 13px;">Clique no botão abaixo para acessar a sua pasta exclusiva e realizar o upload dos seus beats de forma totalmente segura.</p>
+            </div>
+            <a href="#" id="linkDriveBtn" target="_blank" class="btn-drive">Acessar Minha Pasta Exclusiva</a>
+        </div>
+    </main>
+
+    <script>
+        function verificarPerfil() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role'); 
+            const driveLink = urlParams.get('drive'); // Pega o link exclusivo da pasta enviado pelo index.html
+
+            const badge = document.getElementById('perfilBadge');
+            const mensagem = document.getElementById('mensagemBoasVindas');
+            const driveSection = document.getElementById('driveSection');
+            const driveBtn = document.getElementById('linkDriveBtn');
+
+            if (role === 'beatmaker') {
+                badge.innerText = "Perfil: Beatmaker";
+                mensagem.innerText = "Cadastro técnico concluído com sucesso. Assista ao vídeo para alinhar seus direitos na UBC e use o link abaixo para enviar seus beats para distribuição.";
+                
+                // Se o link do drive veio na URL, configura no botão
+                if (driveLink) {
+                    driveBtn.href = decodeURIComponent(driveLink);
+                } else {
+                    // Caso falhe por algum motivo de rede, joga para um link padrão ou exibe erro sutil
+                    driveBtn.innerHTML = "Pasta do Drive temporariamente indisponível";
+                    driveBtn.style.opacity = "0.5";
+                    driveBtn.style.pointerEvents = "none";
+                }
+                
+                driveSection.style.display = "block";
+            } else if (role === 'mc') {
+                badge.innerText = "Perfil: MC";
+                mensagem.innerText = "Seu cadastro na banca foi registrado! Assista ao vídeo com muita atenção para dar entrada na sua filiação à UBC. Isso garante que a divisão dos royalties das batalhas gravadas caia direto na sua conta.";
+                driveSection.style.display = "none";
+            } else {
+                badge.innerText = "Acesso Geral";
+            }
+        }
+
+        window.onload = verificarPerfil;
+    </script>
+</body>
+</html>

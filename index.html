@@ -1,8 +1,12 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Unificado | Blackbox Beatz</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         :root {
             --bg-main: #0a0a0a;
@@ -61,18 +65,17 @@
             font-weight: 500;
         }
 
-
         .battle-logos-row {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px; /* Reduzido levemente para equilibrar o tamanho maior das imagens */
+            gap: 20px;
         }
 
         .logo-battle {
-            height: 50px; /* Aumentado de 38px para 50px para dar o destaque necessário */
+            height: 50px;
             object-fit: contain;
-            opacity: 0.85; /* Um pouco mais visível por padrão */
+            opacity: 0.85;
             transition: all 0.3s ease;
         }
 
@@ -145,16 +148,16 @@
             border-color: rgba(255, 255, 255, 0.6);
             color: var(--text-primary);
             background-color: rgba(255, 255, 255, 0.03);
-            transform: translateY(-2px); /* Eleva o botão de leve */
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); /* Cria o efeito de brilho/glow cinza claro */
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
-       .btn-role.active {
+        .btn-role.active {
             background-color: var(--accent-active);
             color: var(--accent-text);
             border-color: var(--accent-active);
-            transform: translateY(0); /* Garante que ele assente ao ser clicado */
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25); /* Glow mais forte no botão ativo */
+            transform: translateY(0);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
         }
 
         /* Formulário de Cadastro */
@@ -171,6 +174,20 @@
 
         .form-group {
             margin-bottom: 20px;
+        }
+
+        /* Layout em grade */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
         }
 
         .form-group label {
@@ -220,6 +237,13 @@
             color: #000000;
             border-color: #ffffff;
         }
+        
+        .btn-submit:disabled {
+            background-color: #1c1c1e;
+            color: #555;
+            cursor: not-allowed;
+            border-color: #262629;
+        }
     </style>
 </head>
 <body>
@@ -228,9 +252,7 @@
         <div class="logo-main-container">
             <img src="img/blackbox.png" alt="Blackbox Beatz" class="logo-blackbox">
         </div>
-        
         <div class="battle-logos-title">Em parceria com</div>
-        
         <div class="battle-logos-row">
             <img src="img/coalizao.png" alt="Coalizão 016" class="logo-battle">
             <img src="img/sn7.png" alt="Sangue na 7" class="logo-battle">
@@ -254,33 +276,73 @@
             <input type="hidden" id="papel" name="papel" value="">
             
             <div class="form-group">
-                <label for="nome">Nome Completo</label>
+                <label for="nome">Nome Completo *</label>
                 <input type="text" id="nome" name="nome" placeholder="Seu nome civil" required>
             </div>
             
             <div class="form-group">
-                <label for="artistico">Nome Artístico</label>
-                <input type="text" id="artistico" name="artistico" placeholder="Como você assina suas faixas" required>
+                <label for="artistico">Nome Artístico *</label>
+                <input type="text" id="artistico" name="artistico" placeholder="Como você assina seus trampos" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cpf">CPF *</label>
+                    <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                </div>
+                <div class="form-group">
+                    <label for="rg">RG *</label>
+                    <input type="text" id="rg" name="rg" placeholder="00.000.000-0" required>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="cpf">CPF</label>
-                <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
-            </div>
-
-            <div class="form-group">
-                <label for="email">E-mail Comercial</label>
+                <label for="email">E-mail Comercial *</label>
                 <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
             </div>
 
-            <button type="button" class="btn-submit" onclick="enviarCadastro()">Finalizar e Avançar</button>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="whatsapp">WhatsApp *</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="(16) 99999-0000" required>
+                </div>
+                <div class="form-group">
+                    <label for="spotify">Link do Spotify (Opcional)</label>
+                    <input type="url" id="spotify" name="spotify" placeholder="https://open.spotify.com/artist/...">
+                </div>
+            </div>
+
+            <button type="button" id="btnSubmit" class="btn-submit" onclick="enviarCadastro()">Finalizar e Avançar</button>
         </form>
     </main>
 
     <script>
+        // ==================================================
+        // 1. CONFIGURAÇÕES CHAVES DO SEU ECOSSISTEMA
+        // ==================================================
+        const SUPABASE_URL = "https://dzetxipeunvppluyidmu.supabase.co"; 
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6ZXR4aXBldW52cHBsdXlpZG11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDUyMTEsImV4cCI6MjA5NjY4MTIxMX0.xvNvoFrJqa70VryFJWLcW6ckTBij4ANHEVSlTIXxMss";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxu53VTUSybCTg-QxipEJvZs9xwTvIArbwMtt-654_emwuWiCMxM3H4vp_rIK4adXDP/exec";
+
+        // Variável global para armazenar a instância do Supabase
+        let supabaseClient = null;
+
+        // Inicializa o Supabase de forma segura e isolada para não quebrar o resto do script
+        try {
+            if (typeof Supabase !== 'undefined') {
+                supabaseClient = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            } else {
+                console.error("Erro: A biblioteca do Supabase não foi carregada corretamente pelo navegador.");
+            }
+        } catch (e) {
+            console.error("Falha ao iniciar cliente do Supabase:", e);
+        }
+
+        // ==================================================
+        // 2. FUNÇÕES DE INTERAÇÃO DA INTERFACE (SÃO ACESSADAS IMEDIATAMENTE)
+        // ==================================================
         function selectRole(role) {
             document.getElementById('papel').value = role;
-            
             document.getElementById('btnMc').classList.remove('active');
             document.getElementById('btnBeatmaker').classList.remove('active');
             
@@ -289,18 +351,93 @@
             } else {
                 document.getElementById('btnBeatmaker').classList.add('active');
             }
-
             document.getElementById('cadastroForm').style.display = 'block';
         }
 
         async function enviarCadastro() {
             const papel = document.getElementById('papel').value;
             const artistico = document.getElementById('artistico').value;
-            
-            // Futura integração com o Supabase entra aqui.
-            
-            alert(`Cadastro de ${artistico} pré-salvo com sucesso. Direcionando para as etapas da UBC...`);
-            window.location.href = `area-membros.html?role=${papel.toLowerCase()}`;
+            const email = document.getElementById('email').value;
+            const btn = document.getElementById('btnSubmit');
+
+            const dados = {
+                papel: papel.toLowerCase(),
+                nome_completo: document.getElementById('nome').value,
+                nome_artistico: artistico,
+                cpf: document.getElementById('cpf').value,
+                rg: document.getElementById('rg').value,
+                email: email,
+                whatsapp: document.getElementById('whatsapp').value,
+                spotify: document.getElementById('spotify').value,
+                link_drive: null
+            };
+
+            // Trava de validação rápida
+            if (!dados.nome_completo || !dados.nome_artistico || !dados.cpf || !dados.rg || !dados.email || !dados.whatsapp) {
+                alert("Por favor, preencha todos os campos obrigatórios (*).");
+                return;
+            }
+
+            // Desativa botão para evitar cliques múltiplos
+            btn.disabled = true;
+            btn.innerText = "Processando Cadastro...";
+
+            try {
+                // ==================================================
+                // PASSO A: SE FOR BEATMAKER, ACIONA O DRIVE VIA SCRIPT GOOGLE
+                // ==================================================
+                if (dados.papel === 'beatmaker') {
+                    btn.innerText = "Criando sua pasta no Google Drive...";
+                    
+                    const respostaGoogle = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: "POST",
+                        mode: "cors",
+                        body: JSON.stringify({ nome_artistico: dados.nome_artistico, email: dados.email })
+                    });
+                    
+                    const resultadoDrive = await respostaGoogle.json();
+                    
+                    if (resultadoDrive.status === "sucesso") {
+                        dados.link_drive = resultadoDrive.link;
+                    } else {
+                        console.error("Erro no Drive:", resultadoDrive.mensagem);
+                        alert("Aviso: Houve um problema ao gerar sua pasta no Drive, mas salvaremos seu cadastro.");
+                    }
+                }
+
+                // ==================================================
+                // PASSO B: INSERE OS DADOS DENTRO DA SUA TABELA DO SUPABASE
+                // ==================================================
+                btn.innerText = "Salvando dados no Supabase...";
+                
+                if (!supabaseClient) {
+                    throw new Error("O cliente do Supabase não está ativo ou falhou na conexão.");
+                }
+
+                const { error } = await supabaseClient
+                    .from('cadastros')
+                    .insert([dados]);
+
+                if (error) throw error;
+
+                // ==================================================
+                // PASSO C: REDIRECIONAMENTO COM ENCODE SEGURO
+                // ==================================================
+                alert(`Cadastro de ${artistico} efetuado com sucesso!`);
+                
+                let destino = `area-membros.html?role=${dados.papel}`;
+                if(dados.link_drive) {
+                    destino += `&drive=${encodeURIComponent(dados.link_drive)}`;
+                }
+                
+                window.location.href = destino;
+
+            } catch (erroGeral) {
+                console.error("Erro no fluxo do formulário:", erroGeral);
+                alert("Ocorreu um erro ao salvar o cadastro. Verifique a conexão e tente novamente.");
+                btn.disabled = false;
+                btn.innerText = "Finalizar e Avançar";
+            }
         }
     </script>
 </body>
