@@ -323,10 +323,8 @@
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6ZXR4aXBldW52cHBsdXlpZG11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDUyMTEsImV4cCI6MjA5NjY4MTIxMX0.xvNvoFrJqa70VryFJWLcW6ckTBij4ANHEVSlTIXxMss";
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxu53VTUSybCTg-QxipEJvZs9xwTvIArbwMtt-654_emwuWiCMxM3H4vp_rIK4adXDP/exec";
 
-        // Instancia o banco diretamente dentro do escopo seguro de módulos modernos
         const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Expõe as funções para os botões do formulário conseguirem enxergar mesmo estando em modo módulo
         window.selectRole = function(role) {
             document.getElementById('papel').value = role;
             document.getElementById('btnMc').classList.remove('active');
@@ -368,7 +366,7 @@
 
             try {
                 // ==================================================
-                // PASSO A: GOOGLE DRIVE (APENAS BEATMAKER)
+                // PASSO A: INTEGRAÇÃO GOOGLE DRIVE (BEATMAKER)
                 // ==================================================
                 if (dados.papel === 'beatmaker') {
                     btn.innerText = "Criando sua pasta no Google Drive...";
@@ -390,7 +388,7 @@
                 }
 
                 // ==================================================
-                // PASSO B: GRAVAÇÃO NO BANCO DE DADOS
+                // PASSO B: ENVIO DE DADOS PARA O SUPABASE
                 // ==================================================
                 btn.innerText = "Salvando dados no Supabase...";
                 
@@ -401,11 +399,11 @@
                 if (error) throw error;
 
                 // ==================================================
-                // PASSO C: REDIRECIONAMENTO LIMPO E RELATIVO
+                // PASSO C: REDIRECIONAMENTO CORRIGIDO PARA A RAIZ DO SITE (/membros.html)
                 // ==================================================
                 alert(`Cadastro de ${artistico} efetuado com sucesso!`);
                 
-                let destino = `area-membros.html?role=${dados.papel}`;
+                let destino = `/membros.html?role=${dados.papel}`;
                 if(dados.link_drive) {
                     destino += `&drive=${encodeURIComponent(dados.link_drive)}`;
                 }
