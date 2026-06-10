@@ -399,11 +399,11 @@
                 if (error) throw error;
 
                 // ==================================================
-                // PASSO C: REDIRECIONAMENTO CORRIGIDO PARA A RAIZ DO SITE (/membros.html)
+                // PASSO C: REDIRECIONAMENTO PURAMENTE RELATIVO (PRESERVA A SUBPASTA)
                 // ==================================================
                 alert(`Cadastro de ${artistico} efetuado com sucesso!`);
                 
-                let destino = `/membros.html?role=${dados.papel}`;
+                let destino = `membros.html?role=${dados.papel}`;
                 if(dados.link_drive) {
                     destino += `&drive=${encodeURIComponent(dados.link_drive)}`;
                 }
