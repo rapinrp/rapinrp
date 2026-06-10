@@ -365,12 +365,8 @@
             btn.innerText = "Processando Cadastro...";
 
             try {
-                // Limpa links antigos da memória local antes de começar
                 localStorage.removeItem('user_drive_link');
 
-                // ==================================================
-                // PASSO A: INTEGRAÇÃO FLEXÍVEL GOOGLE DRIVE (BEATMAKER)
-                // ==================================================
                 if (dados.papel === 'beatmaker') {
                     btn.innerText = "Criando sua pasta no Google Drive...";
                     
@@ -383,19 +379,23 @@
                         
                         const resultadoDrive = await respostaGoogle.json();
                         
-                        if (resultadoDrive.status === "sucesso" || resultadoDrive.link) {
-                            dados.link_drive = resultadoDrive.link;
-                            // SALVA NA MEMÓRIA LOCAL PARA EVITAR PERDA DE CARACTERES NA URL
-                            localStorage.setItem('user_drive_link', resultadoDrive.link);
+                        // SCANNER MULTICAMADAS: Procura o link em qualquer propriedade enviada pelo Google
+                        let linkEncontrado = resultadoDrive.link || resultadoDrive.url || resultadoDrive.folderUrl || resultadoDrive.mensagem;
+                        
+                        // Validação real: Se o que voltou começa com "http", é o link correto!
+                        if (linkEncontrado && String(linkEncontrado).startsWith('http')) {
+                            dados.link_drive = linkEncontrado;
+                            localStorage.setItem('user_drive_link', linkEncontrado);
+                            console.log("Link capturado com sucesso:", linkEncontrado);
+                        } else {
+                            // Se criou a pasta mas não achamos o link estruturado, exibe o objeto bruto para sabermos o nome
+                            alert("Atenção desenvolvedor! Resposta do Google: " + JSON.stringify(resultadoDrive));
                         }
                     } catch (driveErr) {
                         console.error("Erro na requisição externa do Drive:", driveErr);
                     }
                 }
 
-                // ==================================================
-                // PASSO B: ENVIO DE DADOS PARA O SUPABASE
-                // ==================================================
                 btn.innerText = "Salvando dados no Supabase...";
                 
                 const { error } = await supabaseClient
@@ -404,13 +404,8 @@
 
                 if (error) throw error;
 
-                // ==================================================
-                // PASSO C: REDIRECIONAMENTO LIMPO E SEGURO
-                // ==================================================
                 alert(`Cadastro de ${artistico} efetuado com sucesso!`);
-                
-                // Redirecionamento limpo sem expor strings complexas na barra de endereço
-                window.location.href = `membros.html?role=${dados.papel}`;
+                window.location.href = `membros.html?role=${dados.papel}&nocache=${Date.now()}`;
 
             } catch (erroGeral) {
                 console.error("Erro no fluxo do formulário:", erroGeral);
