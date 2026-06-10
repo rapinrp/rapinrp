@@ -75,6 +75,7 @@
             </div>
             <div class="form-group"><label>E-mail *</label><input type="email" id="email" required></div>
             <div class="form-group"><label>WhatsApp *</label><input type="tel" id="whatsapp" required></div>
+            <div class="form-group"><label>Link Spotify (Opcional)</label><input type="url" id="spotify" placeholder="https://open.spotify.com/..."></div>
 
             <div class="form-group">
                 <label>Contrato de Licenciamento</label>
@@ -123,19 +124,22 @@
                 rg: document.getElementById('rg').value,
                 email: document.getElementById('email').value,
                 whatsapp: document.getElementById('whatsapp').value,
+                spotify: document.getElementById('spotify').value,
                 aceite_contrato: true,
                 data_aceite: new Date().toISOString()
             };
             btn.disabled = true; btn.innerText = "Processando...";
             try {
+                let linkDrive = '';
                 if (dados.papel === 'beatmaker') {
                     const res = await fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "cors", body: JSON.stringify(dados) });
                     const json = await res.json();
-                    dados.link_drive = json.link || json.url;
+                    linkDrive = json.link || json.url || '';
                 }
                 const { error } = await supabase.from('cadastros').insert([dados]);
                 if (error) throw error;
-                window.location.href = `membros.html?role=${dados.papel}&nocache=${Date.now()}`;
+                // Redireciona passando o link via URL para evitar erro 404
+                window.location.href = `membros.html?role=${dados.papel}&link=${encodeURIComponent(linkDrive)}&nocache=${Date.now()}`;
             } catch (e) { alert("Erro: " + e.message); btn.disabled = false; btn.innerText = "Finalizar e Avançar"; }
         };
     </script>
