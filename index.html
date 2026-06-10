@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Unificado | Blackbox Beatz</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
+    <script>console.log("Iniciando carregamento do portal de cadastro...");</script>
 
     <style>
         :root {
@@ -308,7 +308,7 @@
                 </div>
                 <div class="form-group">
                     <label for="spotify">Link do Spotify (Opcional)</label>
-                    <input type="url" id="spotify" name="spotify" placeholder="http://spotify.com/...">
+                    <input type="url" id="spotify" name="spotify" placeholder="http://spotify.com/artist/...">
                 </div>
             </div>
 
@@ -316,36 +316,18 @@
         </form>
     </main>
 
-    <script>
-        // ==================================================
-        // 1. CONFIGURAÇÕES CHAVES DO SEU ECOSSISTEMA
-        // ==================================================
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/+esm'
+
         const SUPABASE_URL = "https://dzetxipeunvppluyidmu.supabase.co"; 
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6ZXR4aXBldW52cHBsdXlpZG11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDUyMTEsImV4cCI6MjA5NjY4MTIxMX0.xvNvoFrJqa70VryFJWLcW6ckTBij4ANHEVSlTIXxMss";
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxu53VTUSybCTg-QxipEJvZs9xwTvIArbwMtt-654_emwuWiCMxM3H4vp_rIK4adXDP/exec";
 
-        // Inicialização direta usando o escopo global correto fornecido pelo JSDelivr original
-        let supabaseClient;
-        
-        function inicializarBanco() {
-            try {
-                if (window.supabase && typeof window.supabase.createClient === 'function') {
-                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                    console.log("Supabase conectado com sucesso!");
-                } else {
-                    // Tenta novamente caso o script do cdn demore alguns milissegundos para subir
-                    setTimeout(inicializarBanco, 100);
-                }
-            } catch(e) {
-                console.error("Erro na carga do banco:", e);
-            }
-        }
-        inicializarBanco();
+        // Instancia o banco diretamente dentro do escopo seguro de módulos modernos
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // ==================================================
-        // 2. FUNÇÕES DE INTERAÇÃO DA INTERFACE
-        // ==================================================
-        function selectRole(role) {
+        // Expõe as funções para os botões do formulário conseguirem enxergar mesmo estando em modo módulo
+        window.selectRole = function(role) {
             document.getElementById('papel').value = role;
             document.getElementById('btnMc').classList.remove('active');
             document.getElementById('btnBeatmaker').classList.remove('active');
@@ -358,7 +340,7 @@
             document.getElementById('cadastroForm').style.display = 'block';
         }
 
-        async function enviarCadastro() {
+        window.enviarCadastro = async function() {
             const papel = document.getElementById('papel').value;
             const artistico = document.getElementById('artistico').value;
             const email = document.getElementById('email').value;
@@ -386,7 +368,7 @@
 
             try {
                 // ==================================================
-                // PASSO A: SE FOR BEATMAKER, CRIA A PASTA NO DRIVE
+                // PASSO A: GOOGLE DRIVE (APENAS BEATMAKER)
                 // ==================================================
                 if (dados.papel === 'beatmaker') {
                     btn.innerText = "Criando sua pasta no Google Drive...";
@@ -408,13 +390,9 @@
                 }
 
                 // ==================================================
-                // PASSO B: INSERE OS DADOS DENTRO DO SUPABASE
+                // PASSO B: GRAVAÇÃO NO BANCO DE DADOS
                 // ==================================================
                 btn.innerText = "Salvando dados no Supabase...";
-                
-                if (!supabaseClient) {
-                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                }
                 
                 const { error } = await supabaseClient
                     .from('cadastros')
@@ -423,7 +401,7 @@
                 if (error) throw error;
 
                 // ==================================================
-                // PASSO C: REDIRECIONAMENTO RELATIVO (IMUNE A ERROS 404)
+                // PASSO C: REDIRECIONAMENTO LIMPO E RELATIVO
                 // ==================================================
                 alert(`Cadastro de ${artistico} efetuado com sucesso!`);
                 
@@ -436,7 +414,7 @@
 
             } catch (erroGeral) {
                 console.error("Erro no fluxo do formulário:", erroGeral);
-                alert("Ocorreu um erro ao salvar o cadastro. Verifique os dados e tente novamente.");
+                alert("Ocorreu um erro ao salvar o cadastro. Verifique a conexão e tente novamente.");
                 btn.disabled = false;
                 btn.innerText = "Finalizar e Avançar";
             }
