@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Unificado | Blackbox Beatz</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+   <script src="https://unpkg.com/@supabase/supabase-js@2.39.8/dist/umd/supabase.js"></script>
 
     <style>
         :root {
@@ -325,18 +325,8 @@
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxu53VTUSybCTg-QxipEJvZs9xwTvIArbwMtt-654_emwuWiCMxM3H4vp_rIK4adXDP/exec";
 
         // Variável global para armazenar a instância do Supabase
-        let supabaseClient = null;
-
-        // Inicializa o Supabase de forma segura e isolada para não quebrar o resto do script
-        try {
-            if (typeof Supabase !== 'undefined') {
-                supabaseClient = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            } else {
-                console.error("Erro: A biblioteca do Supabase não foi carregada corretamente pelo navegador.");
-            }
-        } catch (e) {
-            console.error("Falha ao iniciar cliente do Supabase:", e);
-        }
+     // Inicialização direta e forçada do Supabase
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // ==================================================
         // 2. FUNÇÕES DE INTERAÇÃO DA INTERFACE (SÃO ACESSADAS IMEDIATAMENTE)
