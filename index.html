@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Unificado | Blackbox Beatz</title>
     
-   <script src="/supabase.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase/2.39.8/supabase.js" integrity="sha512-vS7Uf0TOfqS93S966P8wX9Zg2NnKkaGscLWhH86oK9B9M86UqYhS6mS5g4XoG8oM6Hn4N7UoYvGg2m9M86UqYhS6mS5g4XoG8oM6Hn4N7UoYvGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <style>
         :root {
             --bg-main: #0a0a0a;
@@ -268,7 +269,7 @@
         <span class="role-label">Selecione seu Perfil</span>
         <div class="role-selector">
             <button class="btn-role" id="btnMc" onclick="selectRole('MC')">Sou MC</button>
-            <button class="btn-role" id="btnBeatmaker" onclick="selectRole('Beatmaker')">Sou Beatmaker</button>
+            <button class="btn-role" id="btnBeatmaker" onclick="toggleRole('Beatmaker')">Sou Beatmaker</button>
         </div>
 
         <form id="cadastroForm">
@@ -307,7 +308,7 @@
                 </div>
                 <div class="form-group">
                     <label for="spotify">Link do Spotify (Opcional)</label>
-                    <input type="url" id="spotify" name="spotify" placeholder="https://open.spotify.com/artist/...">
+                    <input type="url" id="spotify" name="spotify" placeholder="http://spotify.com/artist/...">
                 </div>
             </div>
 
@@ -323,8 +324,21 @@
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6ZXR4aXBldW52cHBsdXlpZG11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDUyMTEsImV4cCI6MjA5NjY4MTIxMX0.xvNvoFrJqa70VryFJWLcW6ckTBij4ANHEVSlTIXxMss";
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxu53VTUSybCTg-QxipEJvZs9xwTvIArbwMtt-654_emwuWiCMxM3H4vp_rIK4adXDP/exec";
 
-        // Inicialização direta do Supabase usando o arquivo local injetado na linha 8
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Inicialização encapsulada para garantir carregamento via CDN confiável (Cloudflare)
+        let supabaseClient;
+        
+        function inicializarBanco() {
+            try {
+                if (window.supabase && typeof window.supabase.createClient === 'function') {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                } else {
+                    setTimeout(inicializarBanco, 250); // Tenta novamente caso o script demore a responder
+                }
+            } catch(e) {
+                console.error("Erro na carga do banco:", e);
+            }
+        }
+        inicializarBanco();
 
         // ==================================================
         // 2. FUNÇÕES DE INTERAÇÃO DA INTERFACE
@@ -340,6 +354,11 @@
                 document.getElementById('btnBeatmaker').classList.add('active');
             }
             document.getElementById('cadastroForm').style.display = 'block';
+        }
+        
+        // Atalho de segurança para garantir a execução do clique
+        function toggleRole(role) {
+            selectRole(role);
         }
 
         async function enviarCadastro() {
@@ -360,19 +379,17 @@
                 link_drive: null
             };
 
-            // Trava de validação rápida
             if (!dados.nome_completo || !dados.nome_artistico || !dados.cpf || !dados.rg || !dados.email || !dados.whatsapp) {
                 alert("Por favor, preencha todos os campos obrigatórios (*).");
                 return;
             }
 
-            // Desativa botão para evitar cliques múltiplos
             btn.disabled = true;
             btn.innerText = "Processando Cadastro...";
 
             try {
                 // ==================================================
-                // PASSO A: SE FOR BEATMAKER, ACIONA O DRIVE VIA SCRIPT GOOGLE
+                // PASSO A: SE FOR BEATMAKER, CRIA A PASTA NO DRIVE
                 // ==================================================
                 if (dados.papel === 'beatmaker') {
                     btn.innerText = "Criando sua pasta no Google Drive...";
@@ -394,9 +411,14 @@
                 }
 
                 // ==================================================
-                // PASSO B: INSERE OS DADOS DENTRO DA SUA TABELA DO SUPABASE
+                // PASSO B: INSERE OS DADOS DENTRO DO SUPABASE
                 // ==================================================
                 btn.innerText = "Salvando dados no Supabase...";
+                
+                if (!supabaseClient) {
+                    // Força a criação se o script em segundo plano ainda não o fez
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                }
                 
                 const { error } = await supabaseClient
                     .from('cadastros')
@@ -405,11 +427,11 @@
                 if (error) throw error;
 
                 // ==================================================
-                // PASSO C: REDIRECIONAMENTO COM ENCODE SEGURO (RAIZ DO SITE)
+                // PASSO C: REDIRECIONAMENTO LIMPO E DIRETO
                 // ==================================================
                 alert(`Cadastro de ${artistico} efetuado com sucesso!`);
                 
-                let destino = `/area-membros.html?role=${dados.papel}`;
+                let destino = `area-membros.html?role=${dados.papel}`;
                 if(dados.link_drive) {
                     destino += `&drive=${encodeURIComponent(dados.link_drive)}`;
                 }
@@ -418,7 +440,7 @@
 
             } catch (erroGeral) {
                 console.error("Erro no fluxo do formulário:", erroGeral);
-                alert("Ocorreu um erro ao salvar o cadastro. Verifique a conexão e tente novamente.");
+                alert("Ocorreu um erro ao salvar o cadastro. Verifique os dados e tente novamente.");
                 btn.disabled = false;
                 btn.innerText = "Finalizar e Avançar";
             }
