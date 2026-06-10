@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Unificado | Blackbox Beatz</title>
     
-    <script>console.log("Iniciando carregamento do portal de cadastro...");</script>
-
     <style>
         :root {
             --bg-main: #0a0a0a;
@@ -19,253 +17,47 @@
             --accent-text: #000000;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-main); color: var(--text-primary); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
+        .brand-header { text-align: center; margin-bottom: 32px; width: 100%; max-width: 480px; }
+        .logo-blackbox { height: 65px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+        .battle-logos-title { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); margin-bottom: 12px; font-weight: 500; }
+        .battle-logos-row { display: flex; justify-content: center; align-items: center; gap: 20px; }
+        .logo-battle { height: 50px; opacity: 0.85; }
 
-        /* Seção de Marcas / Logos */
-        .brand-header {
-            text-align: center;
-            margin-bottom: 32px;
-            width: 100%;
-            max-width: 480px;
-        }
+        .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; width: 100%; max-width: 480px; padding: 40px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); }
+        .card-header { text-align: center; margin-bottom: 32px; }
+        .role-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 10px; display: block; font-weight: 600; }
+        .role-selector { display: flex; gap: 12px; margin-bottom: 24px; }
+        .btn-role { flex: 1; background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-role.active { background-color: var(--accent-active); color: var(--accent-text); border-color: var(--accent-active); }
 
-        .logo-main-container {
-            margin-bottom: 24px;
-        }
-
-        .logo-blackbox {
-            height: 65px;
-            max-width: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-        }
-
-        .battle-logos-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .battle-logos-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .logo-battle {
-            height: 50px;
-            object-fit: contain;
-            opacity: 0.85;
-            transition: all 0.3s ease;
-        }
-
-        .logo-battle:hover {
-            opacity: 1;
-        }
-
-        /* Card Principal */
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            width: 100%;
-            max-width: 480px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-        }
-
-        .card-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .card-header h1 {
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-        }
-
-        .card-header p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        /* Seleção de Perfil */
-        .role-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            display: block;
-            font-weight: 600;
-        }
-
-        .role-selector {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .btn-role {
-            flex: 1;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .btn-role:hover {
-            border-color: rgba(255, 255, 255, 0.6);
-            color: var(--text-primary);
-            background-color: rgba(255, 255, 255, 0.03);
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-role.active {
-            background-color: var(--accent-active);
-            color: var(--accent-text);
-            border-color: var(--accent-active);
-            transform: translateY(0);
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
-        }
-
-        /* Formulário de Cadastro */
-        #cadastroForm {
-            display: none;
-            margin-top: 24px;
-            animation: fadeIn 0.3s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        /* Layout em grade */
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        @media (max-width: 480px) {
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .form-group input {
-            width: 100%;
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            padding: 14px;
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 15px;
-            transition: all 0.2s ease;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: #55555a;
-            background-color: #222225;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
-        }
-
-        .btn-submit {
-            width: 100%;
-            background-color: #2c2c2e;
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            margin-top: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-submit:hover {
-            background-color: #ffffff;
-            color: #000000;
-            border-color: #ffffff;
-        }
+        #cadastroForm { display: none; }
+        .form-group { margin-bottom: 20px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group label { display: block; font-size: 11px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; }
+        .form-group input { width: 100%; background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 14px; border-radius: 8px; color: var(--text-primary); }
         
-        .btn-submit:disabled {
-            background-color: #1c1c1e;
-            color: #555;
-            cursor: not-allowed;
-            border-color: #262629;
-        }
+        .contract-box { height: 150px; overflow-y: scroll; background: #0a0a0a; border: 1px solid var(--border-color); padding: 15px; margin-bottom: 15px; font-size: 11px; color: #a1a1a6; border-radius: 8px; }
+        .btn-submit { width: 100%; background-color: #2c2c2e; color: #fff; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-submit:hover { background-color: #fff; color: #000; }
     </style>
 </head>
 <body>
 
     <header class="brand-header">
-        <div class="logo-main-container">
-            <img src="img/blackbox.png" alt="Blackbox Beatz" class="logo-blackbox">
-        </div>
+        <img src="img/blackbox.png" alt="Blackbox Beatz" class="logo-blackbox">
         <div class="battle-logos-title">Em parceria com</div>
         <div class="battle-logos-row">
-            <img src="img/coalizao.png" alt="Coalizão 016" class="logo-battle">
-            <img src="img/sn7.png" alt="Sangue na 7" class="logo-battle">
-            <img src="img/novaera.png" alt="Nova Era" class="logo-battle">
+            <img src="img/coalizao.png" class="logo-battle">
+            <img src="img/sn7.png" class="logo-battle">
+            <img src="img/novaera.png" class="logo-battle">
         </div>
     </header>
 
     <main class="card">
-        <div class="card-header">
-            <h1>Portal de Cadastro Técnico</h1>
-            <p>Distribuição digital unificada e gestão profissional de direitos fonográficos.</p>
-        </div>
-
+        <div class="card-header"><h1>Portal de Cadastro</h1></div>
         <span class="role-label">Selecione seu Perfil</span>
         <div class="role-selector">
             <button class="btn-role" id="btnMc" onclick="selectRole('MC')">Sou MC</button>
@@ -273,43 +65,37 @@
         </div>
 
         <form id="cadastroForm">
-            <input type="hidden" id="papel" name="papel" value="">
-            
-            <div class="form-group">
-                <label for="nome">Nome Completo *</label>
-                <input type="text" id="nome" name="nome" placeholder="Seu nome civil" required>
+            <input type="hidden" id="papel" value="">
+            <div class="form-group" style="color: #ffeb3b; font-size: 11px;">
+                <label>Orientações de nomeação:</label> NomeArtista_NomeBeat_BPM_Tom.mp3
             </div>
-            
-            <div class="form-group">
-                <label for="artistico">Nome Artístico *</label>
-                <input type="text" id="artistico" name="artistico" placeholder="Como você assina seus trampos" required>
-            </div>
-
+            <div class="form-group"><label>Nome Completo *</label><input type="text" id="nome" required></div>
+            <div class="form-group"><label>Nome Artístico *</label><input type="text" id="artistico" required></div>
             <div class="form-row">
-                <div class="form-group">
-                    <label for="cpf">CPF *</label>
-                    <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
-                </div>
-                <div class="form-group">
-                    <label for="rg">RG *</label>
-                    <input type="text" id="rg" name="rg" placeholder="00.000.000-0" required>
-                </div>
+                <div class="form-group"><label>CPF *</label><input type="text" id="cpf" required></div>
+                <div class="form-group"><label>RG *</label><input type="text" id="rg" required></div>
             </div>
+            <div class="form-group"><label>E-mail *</label><input type="email" id="email" required></div>
+            <div class="form-group"><label>WhatsApp *</label><input type="tel" id="whatsapp" required></div>
 
             <div class="form-group">
-                <label for="email">E-mail Comercial *</label>
-                <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="whatsapp">WhatsApp *</label>
-                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="(16) 99999-0000" required>
+                <label>Contrato de Licenciamento</label>
+                <div class="contract-box">
+                    <strong>CLÁUSULA 1 — OBJETO:</strong> Licenciamento da obra musical e fonograma.<br><br>
+                    <strong>CLÁUSULA 2 — IMAGEM:</strong> Autorização gratuita e irrevogável de voz e imagem.<br><br>
+                    <strong>CLÁUSULA 3 — DIREITOS AUTORAIS:</strong> Divisão 50% MC / 50% Beatmaker.<br><br>
+                    <strong>CLÁUSULA 4 — DIREITOS CONEXOS:</strong> MC(41,7%), Beatmaker(16,6%), Selo(41,7%).<br><br>
+                    <strong>CLÁUSULA 5 — ROYALTIES:</strong> 16% cada (MC, Beat, Batalha, Selo), 20% Distribuidora.<br><br>
+                    <strong>CLÁUSULA 6 — DISTRIBUIÇÃO:</strong> Responsabilidade do Selo.<br><br>
+                    <strong>CLÁUSULA 7 — PRAZO:</strong> Indeterminado.<br><br>
+                    <strong>CLÁUSULA 8 — EXCLUSIVIDADE:</strong> Não impeditiva para outros projetos.<br><br>
+                    <strong>CLÁUSULA 9 — DIVULGAÇÃO:</strong> Obrigatória colaboração em redes sociais.<br><br>
+                    <strong>CLÁUSULA 10 — CONTAS:</strong> Relatórios automáticos via distribuidora.<br><br>
+                    <strong>CLÁUSULA 11 — RESPONSABILIDADES:</strong> Garantia de originalidade da obra.<br><br>
+                    <strong>CLÁUSULA 12 — RESCISÃO:</strong> Por acordo ou aviso prévio de 30 dias.<br><br>
+                    <strong>CLÁUSULA 13 — DISPOSIÇÕES GERAIS:</strong> Foro de Ribeirão Preto/SP.
                 </div>
-                <div class="form-group">
-                    <label for="spotify">Link do Spotify (Opcional)</label>
-                    <input type="url" id="spotify" name="spotify" placeholder="http://spotify.com/artist/...">
-                </div>
+                <input type="checkbox" id="aceite" required> <label style="font-size: 11px;">Li e concordo com os termos.</label>
             </div>
 
             <button type="button" id="btnSubmit" class="btn-submit" onclick="enviarCadastro()">Finalizar e Avançar</button>
@@ -317,103 +103,43 @@
     </main>
 
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/+esm'
-
-        const SUPABASE_URL = "https://dzetxipeunvppluyidmu.supabase.co"; 
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6ZXR4aXBldW52cHBsdXlpZG11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDUyMTEsImV4cCI6MjA5NjY4MTIxMX0.xvNvoFrJqa70VryFJWLcW6ckTBij4ANHEVSlTIXxMss";
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/+esm';
+        const supabase = createClient("https://dzetxipeunvppluyidmu.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6ZXR4aXBldW52cHBsdXlpZG11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDUyMTEsImV4cCI6MjA5NjY4MTIxMX0.xvNvoFrJqa70VryFJWLcW6ckTBij4ANHEVSlTIXxMss");
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxu53VTUSybCTg-QxipEJvZs9xwTvIArbwMtt-654_emwuWiCMxM3H4vp_rIK4adXDP/exec";
 
-        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        window.selectRole = function(role) {
-            document.getElementById('papel').value = role;
-            document.getElementById('btnMc').classList.remove('active');
-            document.getElementById('btnBeatmaker').classList.remove('active');
-            
-            if (role === 'MC') {
-                document.getElementById('btnMc').classList.add('active');
-            } else {
-                document.getElementById('btnBeatmaker').classList.add('active');
-            }
+        window.selectRole = (r) => {
+            document.getElementById('papel').value = r;
+            document.getElementById('btnMc').classList.toggle('active', r === 'MC');
+            document.getElementById('btnBeatmaker').classList.toggle('active', r === 'Beatmaker');
             document.getElementById('cadastroForm').style.display = 'block';
-        }
+        };
 
-        window.enviarCadastro = async function() {
-            const papel = document.getElementById('papel').value;
-            const artistico = document.getElementById('artistico').value;
-            const email = document.getElementById('email').value;
+        window.enviarCadastro = async () => {
+            if (!document.getElementById('aceite').checked) return alert("Você deve aceitar o contrato.");
             const btn = document.getElementById('btnSubmit');
-
             const dados = {
-                papel: papel.toLowerCase(),
+                papel: document.getElementById('papel').value.toLowerCase(),
                 nome_completo: document.getElementById('nome').value,
-                nome_artistico: artistico,
+                nome_artistico: document.getElementById('artistico').value,
                 cpf: document.getElementById('cpf').value,
                 rg: document.getElementById('rg').value,
-                email: email,
+                email: document.getElementById('email').value,
                 whatsapp: document.getElementById('whatsapp').value,
-                spotify: document.getElementById('spotify').value,
-                link_drive: null
+                aceite_contrato: true,
+                data_aceite: new Date().toISOString()
             };
-
-            if (!dados.nome_completo || !dados.nome_artistico || !dados.cpf || !dados.rg || !dados.email || !dados.whatsapp) {
-                alert("Por favor, preencha todos os campos obrigatórios (*).");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerText = "Processando Cadastro...";
-
+            btn.disabled = true; btn.innerText = "Processando...";
             try {
-                localStorage.removeItem('user_drive_link');
-
                 if (dados.papel === 'beatmaker') {
-                    btn.innerText = "Criando sua pasta no Google Drive...";
-                    
-                    try {
-                        const respostaGoogle = await fetch(GOOGLE_SCRIPT_URL, {
-                            method: "POST",
-                            mode: "cors",
-                            body: JSON.stringify({ nome_artistico: dados.nome_artistico, email: dados.email })
-                        });
-                        
-                        const resultadoDrive = await respostaGoogle.json();
-                        
-                        // SCANNER MULTICAMADAS: Procura o link em qualquer propriedade enviada pelo Google
-                        let linkEncontrado = resultadoDrive.link || resultadoDrive.url || resultadoDrive.folderUrl || resultadoDrive.mensagem;
-                        
-                        // Validação real: Se o que voltou começa com "http", é o link correto!
-                        if (linkEncontrado && String(linkEncontrado).startsWith('http')) {
-                            dados.link_drive = linkEncontrado;
-                            localStorage.setItem('user_drive_link', linkEncontrado);
-                            console.log("Link capturado com sucesso:", linkEncontrado);
-                        } else {
-                            // Se criou a pasta mas não achamos o link estruturado, exibe o objeto bruto para sabermos o nome
-                            alert("Atenção desenvolvedor! Resposta do Google: " + JSON.stringify(resultadoDrive));
-                        }
-                    } catch (driveErr) {
-                        console.error("Erro na requisição externa do Drive:", driveErr);
-                    }
+                    const res = await fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "cors", body: JSON.stringify(dados) });
+                    const json = await res.json();
+                    dados.link_drive = json.link || json.url;
                 }
-
-                btn.innerText = "Salvando dados no Supabase...";
-                
-                const { error } = await supabaseClient
-                    .from('cadastros')
-                    .insert([dados]);
-
+                const { error } = await supabase.from('cadastros').insert([dados]);
                 if (error) throw error;
-
-                alert(`Cadastro de ${artistico} efetuado com sucesso!`);
                 window.location.href = `membros.html?role=${dados.papel}&nocache=${Date.now()}`;
-
-            } catch (erroGeral) {
-                console.error("Erro no fluxo do formulário:", erroGeral);
-                alert("Ocorreu um erro ao salvar o cadastro. Verifique a conexão e tente novamente.");
-                btn.disabled = false;
-                btn.innerText = "Finalizar e Avançar";
-            }
-        }
+            } catch (e) { alert("Erro: " + e.message); btn.disabled = false; btn.innerText = "Finalizar e Avançar"; }
+        };
     </script>
 </body>
 </html>
