@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Unificado | Blackbox Beatz</title>
     
-  <script src="supabase.js"></script>
+    <script src="supabase.js"></script>
+
     <style>
         :root {
             --bg-main: #0a0a0a;
@@ -323,12 +324,11 @@
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6ZXR4aXBldW52cHBsdXlpZG11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDUyMTEsImV4cCI6MjA5NjY4MTIxMX0.xvNvoFrJqa70VryFJWLcW6ckTBij4ANHEVSlTIXxMss";
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxu53VTUSybCTg-QxipEJvZs9xwTvIArbwMtt-654_emwuWiCMxM3H4vp_rIK4adXDP/exec";
 
-        // Variável global para armazenar a instância do Supabase
-     // Inicialização direta e forçada do Supabase
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Inicialização direta do Supabase usando o arquivo local injetado na linha 8
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // ==================================================
-        // 2. FUNÇÕES DE INTERAÇÃO DA INTERFACE (SÃO ACESSADAS IMEDIATAMENTE)
+        // 2. FUNÇÕES DE INTERAÇÃO DA INTERFACE
         // ==================================================
         function selectRole(role) {
             document.getElementById('papel').value = role;
@@ -399,10 +399,6 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
                 // ==================================================
                 btn.innerText = "Salvando dados no Supabase...";
                 
-                if (!supabaseClient) {
-                    throw new Error("O cliente do Supabase não está ativo ou falhou na conexão.");
-                }
-
                 const { error } = await supabaseClient
                     .from('cadastros')
                     .insert([dados]);
@@ -410,11 +406,11 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
                 if (error) throw error;
 
                 // ==================================================
-                // PASSO C: REDIRECIONAMENTO COM ENCODE SEGURO
+                // PASSO C: REDIRECIONAMENTO COM ENCODE SEGURO (RAIZ DO SITE)
                 // ==================================================
                 alert(`Cadastro de ${artistico} efetuado com sucesso!`);
                 
-                let destino = `area-membros.html?role=${dados.papel}`;
+                let destino = `/area-membros.html?role=${dados.papel}`;
                 if(dados.link_drive) {
                     destino += `&drive=${encodeURIComponent(dados.link_drive)}`;
                 }
