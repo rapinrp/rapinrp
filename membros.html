@@ -80,24 +80,25 @@
     </main>
 
     <script>
-        function verificarPerfil() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const role = urlParams.get('role'); 
-            let driveLink = localStorage.getItem('user_drive_link');
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const role = params.get('role');
+            const link = params.get('link'); // Captura o link vindo da URL (mais seguro)
 
             const badge = document.getElementById('perfilBadge');
             const driveSection = document.getElementById('driveSection');
             const driveBtn = document.getElementById('linkDriveBtn');
 
-            if (role === 'beatmaker') {
-                badge.innerText = "Perfil: Beatmaker";
+            badge.innerText = "Perfil: " + (role === 'beatmaker' ? 'Beatmaker' : 'MC');
+
+            if (role === 'beatmaker' && link) {
+                // Decodifica o link vindo da URL e atribui ao botão
+                driveBtn.href = decodeURIComponent(link);
                 driveSection.style.display = "block";
-                if (driveLink) driveBtn.href = driveLink;
             } else {
-                badge.innerText = "Perfil: MC";
+                driveSection.style.display = "none";
             }
-        }
-        window.onload = verificarPerfil;
+        };
     </script>
 </body>
 </html>
