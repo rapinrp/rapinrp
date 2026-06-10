@@ -186,8 +186,8 @@
             const urlParams = new URLSearchParams(window.location.search);
             const role = urlParams.get('role'); 
             
-            // RECUPERA O LINK DA MEMÓRIA LOCAL E DECODIFICA CASO ESTEJA FORMATADO
-            let driveLink = localStorage.getItem('user_drive_link');
+            // SISTEMA HÍBRIDO: Tenta ler da memória interna primeiro, se não achar tenta ler da URL
+            let driveLink = localStorage.getItem('user_drive_link') || urlParams.get('drive');
 
             const badge = document.getElementById('perfilBadge');
             const mensagem = document.getElementById('mensagemBoasVindas');
@@ -198,8 +198,9 @@
                 badge.innerText = "Perfil: Beatmaker";
                 mensagem.innerText = "Cadastro técnico concluído com sucesso. Assista ao vídeo para alinhar seus direitos na UBC e use o link abaixo para enviar seus beats para distribuição.";
                 
-                if (driveLink && (driveLink.startsWith('http') || driveLink.includes('drive.google'))) {
-                    driveBtn.href = driveLink;
+                // Validação elástica para aceitar qualquer formato válido de URL do Google Drive
+                if (driveLink && String(driveLink).includes('http')) {
+                    driveBtn.href = decodeURIComponent(driveLink);
                     driveBtn.style.opacity = "1";
                     driveBtn.style.pointerEvents = "auto";
                     driveBtn.innerHTML = "Acessar Minha Pasta Exclusiva";
