@@ -34,10 +34,13 @@
         #driveSection { display: none; border-top: 1px solid var(--border-color); padding-top: 24px; margin-top: 24px; }
         .btn-drive { display: block; width: 100%; text-align: center; background-color: var(--accent-drive); color: var(--accent-text-drive); border: none; padding: 16px; border-radius: 8px; font-weight: 600; font-size: 15px; text-decoration: none; text-transform: uppercase; margin-top: 20px; }
         
-        .rules-box { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; border-left: 4px solid #ff4757; margin-bottom: 24px; }
-        .rules-box h3 { font-size: 14px; color: #ff4757; margin-bottom: 10px; text-transform: uppercase; }
-        .rules-box ul { list-style: none; padding-left: 0; }
-        .rules-box li { font-size: 13px; color: #e0e0e0; margin-bottom: 8px; line-height: 1.4; }
+        .rules-box, .naming-box { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 8px; border-left: 4px solid #ff4757; margin-bottom: 24px; }
+        .naming-box { border-left-color: #fff; }
+        .rules-box h3, .naming-box h3 { font-size: 14px; margin-bottom: 12px; text-transform: uppercase; }
+        .naming-box h3 { color: #fff; }
+        .rules-box ul, .naming-box ul { list-style: none; padding-left: 0; }
+        .rules-box li, .naming-box li { font-size: 13px; color: #e0e0e0; margin-bottom: 6px; }
+        .example-code { background: #000; padding: 10px; border-radius: 5px; font-family: monospace; color: #00ff9d; font-size: 12px; margin-top: 10px; border: 1px solid #333; }
     </style>
 </head>
 <body>
@@ -59,30 +62,27 @@
                 <li>• <b>Filiação:</b> Acesse <a href="https://www.ubc.org.br/ferramentas/como-se-associar" target="_blank" style="color: #fff;">como se associar à UBC aqui</a>.</li>
                 <li>• <b>Quantidade:</b> Devem ser enviados no mínimo 3 Beats.</li>
                 <li>• <b>Diversidade:</b> Preferencialmente estilos diferentes.</li>
-                <li>• <b>Samples:</b> Devem ser manipulados até ficarem irreconhecíveis ou não identificáveis.</li>
+                <li>• <b>Samples:</b> Devem ser manipulados até ficarem irreconhecíveis.</li>
             </ul>
+        </div>
+
+        <div class="naming-box">
+            <h3>📝 Como nomear seus arquivos:</h3>
+            <ul>
+                <li><b>Padrão:</b> [Estilo] [Número] - Prod. [Seu Nome]</li>
+            </ul>
+            <div class="example-code">
+                Boom Bap 1 - Prod. Black Box Beatz<br>
+                Boom Bap 2 - Prod. Black Box Beatz<br>
+                Drill 1 - Prod. Black Box Beatz
+            </div>
         </div>
 
         <div class="video-container">
             <iframe src="https://www.youtube.com/embed/hW9nVeZ-R3Q" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
 
-        <div style="background: #1c1c1e; padding: 15px; border-radius: 8px; border: 1px solid #333; margin-bottom: 24px;">
-            <h3 style="font-size: 14px; margin-bottom: 8px; color: #fff;">⚠️ Importante: Filiação Obrigatória</h3>
-            <p style="font-size: 12px; color: #a1a1a6; line-height: 1.5;">
-                A ausência de cadastro em entidade de gestão coletiva (como a UBC) pode resultar na retenção dos seus rendimentos. O Selo não se responsabiliza por valores retidos devido à falta de filiação.
-            </p>
-        </div>
-
         <div id="driveSection">
-            <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border-left: 4px solid #fff;">
-                <h4 style="font-size: 13px; color: #fff; margin-bottom: 10px;">Como nomear seus Beats:</h4>
-                <ul style="font-size: 12px; color: #a1a1a6; list-style: none; padding-left: 10px; margin-bottom: 10px;">
-                    <li>• Estilo do Beat (Boom Bap, Trap, Drill, etc)</li>
-                    <li>• Número do Beat</li>
-                    <li>• Nome do Beatmaker</li>
-                </ul>
-            </div>
             <a href="#" id="linkDriveBtn" target="_blank" class="btn-drive">Acessar Minha Pasta Exclusiva</a>
         </div>
     </main>
