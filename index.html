@@ -66,7 +66,6 @@
 
         <form id="cadastroForm">
             <input type="hidden" id="papel" value="">
-            
             <div class="form-group"><label>Nome Completo *</label><input type="text" id="nome" required></div>
             <div class="form-group"><label>Nome Artístico *</label><input type="text" id="artistico" required></div>
             <div class="form-row">
@@ -96,9 +95,16 @@
                 </div>
                 <input type="checkbox" id="aceite" required> <label style="font-size: 11px;">Li e concordo com os termos.</label>
             </div>
-
             <button type="button" id="btnSubmit" class="btn-submit" onclick="enviarCadastro()">Finalizar e Avançar</button>
         </form>
+
+        <div id="consultaArea" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #262629; text-align: center;">
+            <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase;">Já é cadastrado? Acesse sua pasta:</p>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="cpfConsulta" placeholder="Digite seu CPF" style="background: #1c1c1e; border: 1px solid #262629; padding: 10px; border-radius: 8px; color: white; flex: 1;">
+                <button onclick="buscarCadastro(event)" style="background: #fff; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; color: #000;">Acessar</button>
+            </div>
+        </div>
     </main>
 
     <script type="module">
@@ -138,9 +144,20 @@
                 }
                 const { error } = await supabase.from('cadastros').insert([dados]);
                 if (error) throw error;
-                // Redireciona passando o link via URL para evitar erro 404
                 window.location.href = `membros.html?role=${dados.papel}&link=${encodeURIComponent(linkDrive)}&nocache=${Date.now()}`;
             } catch (e) { alert("Erro: " + e.message); btn.disabled = false; btn.innerText = "Finalizar e Avançar"; }
+        };
+
+        window.buscarCadastro = async (event) => {
+            const cpf = document.getElementById('cpfConsulta').value;
+            if (!cpf) return alert("Digite o CPF.");
+            const btn = event.target;
+            btn.innerText = "Buscando...";
+            try {
+                const { data, error } = await supabase.from('cadastros').select('papel, link_drive').eq('cpf', cpf).single();
+                if (error || !data) throw new Error("Cadastro não encontrado.");
+                window.location.href = `membros.html?role=${data.papel}&link=${encodeURIComponent(data.link_drive || '')}&nocache=${Date.now()}`;
+            } catch (e) { alert(e.message); btn.innerText = "Acessar"; }
         };
     </script>
 </body>
